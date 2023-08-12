@@ -21,9 +21,4 @@ l2=list(map(int, sys.stdin.readline().strip().split()))
 result = []
 l1.sort()
 for num in l2:
-    check=0
     print(bsearch(l1, num, 0, len(l1)))
-    result.append(check)
-
-#for r in result:
- #   print(r)
