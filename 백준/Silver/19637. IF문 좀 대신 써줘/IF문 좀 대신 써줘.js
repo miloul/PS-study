@@ -1,41 +1,39 @@
-let fs = require('fs');
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+const arr = fs
+  .readFileSync(filePath)
+  .toString()
+  .trim()
+  .split("\n")
+  .map((line) => line.replace("\r", ""));
 
-const inputs = fs.readFileSync('/dev/stdin').toString().split('\n');
-//const inputs = fs.readFileSync(__dirname+'/ex2.txt').toString().split('\n');
+const [n, m] = arr[0].split(" ").map(Number);
 
-const [n, m] = inputs[0].split(' ').map(Number);
-
-let obj = {}
-let l1 = [];
-
-for (let i=1; i<=n; i++) {
-    let [name, num]= inputs[i].split(' ');
-    num = Number(num);
-    if (!Boolean(obj[num])) {
-        obj[num] = name;
-        l1.push(num);
-    }
+let names = [];
+let nums = [];
+for (let i = 1; i <= n; i++) {
+  const [name, num] = arr[i].split(" ");
+  names.push(name);
+  nums.push(Number(num));
 }
 
 let answer = [];
+for (let j = 0; j < m; j++) {
+  const power = Number(arr[j + n + 1]);
+  let start = (result = 0);
+  let end = nums.length;
 
-for (let i=0; i<m; i++) {
-    const target = Number(inputs[i+n+1])
-    let start = result = 0;
-    let end = l1.length - 1;
-
-    while (start <= end) {
-        let mid = parseInt((start + end) / 2);
-        if (target <= l1[mid]) {
-            end = mid - 1;
-            result = l1[mid]
-        }
-        else {
-            start = mid + 1;
-            result = l1[start];
-        }
+  while (start <= end) {
+    let mid = Math.floor((start + end) / 2);
+    if (power <= nums[mid]) {
+      end = mid - 1;
+      result = names[mid];
+    } else {
+      start = mid + 1;
+      result = names[start];
     }
-    answer.push(obj[result]);
+  }
+  answer.push(result);
 }
 
-console.log(answer.join('\n'));
+console.log(answer.join("\n"));
