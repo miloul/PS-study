@@ -1,66 +1,60 @@
-function dfs(graph, start, dfsVisit) { //재귀
-    dfsVisit[start] = true;
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-    dfsResult.push(start);
-    for (const node of graph[start]) {
-        if (!dfsVisit[node]) {
-            dfs(graph, node, dfsVisit);
-        }
-    }
-    return;
-}
-
-function bfs(graph, start) {
-    const bfsVisit = new Array(n + 1).fill(false);
-    const q = [];
-    let bfsResult = [start];
-
-    q.push(start);
-
-    while (q.length) {
-        const k = q.shift();
-        bfsVisit[k] = true;
-
-        for (const node of graph[k]) {
-            if (!bfsVisit[node]) {
-                q.push(node);
-                bfsVisit[node] = true;
-                bfsResult.push(node);
-            }
-        }
-    }
-
-    return bfsResult.join(' ');
-}
-
-
-let fs = require('fs');
-
-const inputs = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
-//const inputs = fs.readFileSync(__dirname+'/ex2.txt').toString().split('\n');
-
-const [n, m, v] = inputs[0].split(' ').map(Number);
-
+const [n, m, v] = input[0].split(" ").map(Number);
 let graph = [];
-for (let i=1; i<=n; i++){
-    graph[i] = [];
+for (let i = 0; i <= n; i++) {
+  graph.push([]);
 }
 
-for (let i=1; i <= m; i++) {
-    const [v1, v2] = inputs[i].split(' ').map(Number);
-
-    graph[v1].push(v2);
-    graph[v2].push(v1);
+for (let i = 1; i <= m; i++) {
+  const [a, b] = input[i].split(" ").map(Number);
+  graph[a].push(b);
+  graph[b].push(a);
 }
 
-graph.forEach((element) => { //그래프 정렬
-    element.sort((a, b) => a - b);
+graph.forEach((element) => {
+  //그래프 정렬
+  element.sort((a, b) => a - b);
 });
 
 let dfsResult = [];
 
-dfs(graph, v, []);
-const bfsResult = bfs(graph, v);
+const dfs = (visited, v) => {
+  visited[v] = 1;
+  dfsResult.push(v);
 
-console.log(dfsResult.join(' '));
-console.log(bfsResult);
+  for (const q of graph[v]) {
+    if (!visited[q]) {
+      dfs(visited, q);
+    }
+  }
+};
+
+const bfs = () => {
+  let visited = new Array(n + 1).fill(0);
+  let bfsResult = [];
+  let queue = [v];
+  visited[v] = 1;
+
+  while (queue.length > 0) {
+    const node = queue.shift();
+    bfsResult.push(node);
+
+    for (const q of graph[node]) {
+      if (!visited[q]) {
+        queue.push(q);
+        visited[q] = 1;
+      }
+    }
+  }
+
+  console.log(bfsResult.join(" "));
+};
+
+let visited = new Array(n + 1).fill(0);
+
+dfs(visited, v);
+console.log(dfsResult.join(" "));
+bfs();
