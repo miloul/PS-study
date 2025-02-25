@@ -3,15 +3,13 @@ const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
 const [n, m, v] = input[0].split(" ").map(Number);
-let graph = [];
-for (let i = 0; i <= n; i++) {
-  graph.push([]);
-}
+
+let graph = Array.from(Array(n + 1), () => new Array());
 
 for (let i = 1; i <= m; i++) {
-  const [a, b] = input[i].split(" ").map(Number);
-  graph[a].push(b);
-  graph[b].push(a);
+  const [x, y] = input[i].split(" ").map(Number);
+  graph[x].push(y);
+  graph[y].push(x);
 }
 
 graph.forEach((element) => {
@@ -19,42 +17,36 @@ graph.forEach((element) => {
   element.sort((a, b) => a - b);
 });
 
-let dfsResult = [];
-
-const dfs = (visited, v) => {
+// bfs
+const bfs = () => {
+  let result = [];
+  let visited = new Array(n + 1).fill(0);
+  let q = [v];
   visited[v] = 1;
-  dfsResult.push(v);
-
-  for (const q of graph[v]) {
-    if (!visited[q]) {
-      dfs(visited, q);
+  while (q.length !== 0) {
+    let node = q.shift();
+    result.push(node);
+    for (let i = 0; i < graph[node].length; i++) {
+      if (visited[graph[node][i]]) continue;
+      q.push(graph[node][i]);
+      visited[graph[node][i]] = 1;
     }
   }
+  return result.join(" ");
 };
 
-const bfs = () => {
-  let visited = new Array(n + 1).fill(0);
-  let bfsResult = [];
-  let queue = [v];
-  visited[v] = 1;
-
-  while (queue.length > 0) {
-    const node = queue.shift();
-    bfsResult.push(node);
-
-    for (const q of graph[node]) {
-      if (!visited[q]) {
-        queue.push(q);
-        visited[q] = 1;
-      }
-    }
+// dfs
+let dfsr = [];
+const dfs = (node, visited) => {
+  if (visited[node]) return;
+  visited[node] = 1;
+  dfsr.push(node);
+  for (let i = 0; i < graph[node].length; i++) {
+    dfs(graph[node][i], visited);
   }
-
-  console.log(bfsResult.join(" "));
 };
 
 let visited = new Array(n + 1).fill(0);
-
-dfs(visited, v);
-console.log(dfsResult.join(" "));
-bfs();
+dfs(v, visited);
+console.log(dfsr.join(" "));
+console.log(bfs());
