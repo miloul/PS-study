@@ -1,5 +1,5 @@
 // ABCDE
-// depth 5
+// depth 4
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
@@ -20,7 +20,7 @@ let result = 0;
 const dfs = (node, depth) => {
   visited[node] = 1;
   if (result) return;
-  if (depth === 5) {
+  if (depth === 4) {
     result = 1;
     return;
   }
@@ -32,7 +32,7 @@ const dfs = (node, depth) => {
 
 for (let i = 0; i < n; i++) {
   if (result) break;
-  dfs(i, 1);
+  dfs(i, 0);
 }
 
 console.log(result);
