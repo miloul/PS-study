@@ -1,16 +1,19 @@
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs.readFileSync(filePath).toString().trim().split("\n");
+const inputs = fs.readFileSync(filePath).toString().trim().split("\n");
 
-let [n, k] = input[0].split(" ").map(Number);
-let cnt = 0;
+let [n, k] = inputs[0].split(" ").map(Number);
 
-for (let i = n; i > 0; i--) {
-  const c = Number(input[i]);
-  if (c <= k) {
-    cnt += Math.floor(k / c);
-    k %= c;
+function solution(list) {
+  let cnt = 0;
+  for (let i = 0; i < n; i++) {
+    let coin = list[i];
+    if (k >= coin) {
+      cnt += parseInt(k / coin);
+      k = k % coin;
+    }
   }
+  return cnt;
 }
 
-console.log(cnt);
+console.log(solution(inputs.slice(1).reverse().map(Number)));
