@@ -1,28 +1,22 @@
-let fs = require('fs');
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+const [nk, ...input] = fs.readFileSync(filePath).toString().trim().split("\n");
 
-const inputs = fs.readFileSync('/dev/stdin').toString().split('\n');
-//const inputs = fs.readFileSync(__dirname + '/ex2.txt').toString().split('\n');
-
-let [k, n] = inputs[0].split(' ').map(Number);
-let l1 = [];
-
-for (let i = 1; i <= k; i++) {
-    l1.push(Number(inputs[i]))
+const [k, n] = nk.split(" ").map(Number);
+for (let i = 0; i < k; i++) {
+  input[i] = Number(input[i]);
 }
 
 let start = 1;
-let end = Math.max(...l1);
-
+let end = Math.max(...input);
 while (start <= end) {
-    let r = 0;
-    let mid = ~~((start + end) / 2);
-    for (let i = 0; i < k; i++) {
-        r += ~~(l1[i] / mid);
-    }
-    if (r >= n) {
-        start = mid + 1;
-    } else {
-        end = mid - 1;
-    }
+  let mid = ~~((start + end) / 2);
+  let cnt = 0;
+  for (let i = 0; i < k; i++) {
+    cnt += ~~(input[i] / mid);
+  }
+  if (cnt >= n) start = mid + 1;
+  else end = mid - 1;
 }
+
 console.log(end);
