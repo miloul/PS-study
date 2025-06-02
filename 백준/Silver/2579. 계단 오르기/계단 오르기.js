@@ -1,24 +1,29 @@
-let fs = require('fs');
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-const inputs = fs.readFileSync('/dev/stdin').toString().split('\n').map(Number);
-//const inputs = fs.readFileSync(__dirname + '/ex2.txt').toString().split('\n').map(Number);
+const n = Number(input[0]);
 
-const n = inputs[0]
-let stair = inputs.slice(1)
+let stairs = [];
 
-let result = new Array(n + 1).fill(0)
-
-for (let i = 0; i < n; i++) {
-    if (i == 0) {
-        result[i] = stair[0]
-    } else if (i == 1) {
-        result[i] = stair[0] + stair[1]
-    } else if (i === 2) {
-        result[i] = Math.max(stair[0], stair[1]) + stair[2]
-    } else {
-        result[i] = Math.max(result[i - 2], result[i - 3] + stair[i - 1]) + stair[i]
-    }
-
+for (let i = 1; i <= n; i++) {
+  stairs.push(Number(input[i]));
 }
 
-console.log(result[n - 1])
+let dp = Array.from(new Array(n), () => new Array(2).fill(0));
+dp[0][0] = 0;
+dp[0][1] = stairs[0];
+
+if (stairs.length >= 2) {
+  dp[1][0] = stairs[1];
+  dp[1][1] = dp[0][1] + stairs[1];
+}
+
+for (let i = 2; i < stairs.length; i++) {
+  // 연속
+  dp[i][1] = stairs[i] + dp[i - 1][0];
+  // 연속 아님
+  dp[i][0] = Math.max(...dp[i - 2]) + stairs[i];
+}
+
+console.log(Math.max(...dp[n - 1]));
