@@ -1,5 +1,5 @@
 # PS-study
-백준 프로그래머스 풀이 repo (with [BaekjoonHub](https://github.com/BaekjoonHub/BaekjoonHub))
+백준 프로그래머스 릿코드 풀이 repo (with [BaekjoonHub](https://github.com/BaekjoonHub/BaekjoonHub) & [LeetHub2.0](https://github.com/arunbhardwaj/LeetHub-2.0))
 
 <!---LeetCode Topics Start-->
 # LeetCode Topics
